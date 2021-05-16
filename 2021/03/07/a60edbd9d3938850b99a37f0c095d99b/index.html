@@ -1,0 +1,364 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>第一次有人把“分布式事务”讲的这么简单明了 | yexm</title><meta name="keywords" content="分布式事务"><meta name="author" content="yexm"><meta name="copyright" content="yexm"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="又或者在网上购物明明已经扣款，但是却告诉我没有发生交易。这一系列情况都是因为没有事务导致的。这说明了事务在生活中的一些重要性。 有了事务，你去小卖铺买东西，那就是一手交钱一手交货。有了事务，你去网上购物，扣款即产生订单交易。 事务的具体定义事务提供一种机制将一个活动涉及的所有操作纳入到一个不可分割的执行单元，组成事务的所有操作只有在所有操作均能正常执行的情况下方能提交，只要其中任一操作执行失败，都">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第一次有人把“分布式事务”讲的这么简单明了">
+<meta property="og:url" content="http://yexm1018.com/2021/03/07/a60edbd9d3938850b99a37f0c095d99b/index.html">
+<meta property="og:site_name" content="yexm">
+<meta property="og:description" content="又或者在网上购物明明已经扣款，但是却告诉我没有发生交易。这一系列情况都是因为没有事务导致的。这说明了事务在生活中的一些重要性。 有了事务，你去小卖铺买东西，那就是一手交钱一手交货。有了事务，你去网上购物，扣款即产生订单交易。 事务的具体定义事务提供一种机制将一个活动涉及的所有操作纳入到一个不可分割的执行单元，组成事务的所有操作只有在所有操作均能正常执行的情况下方能提交，只要其中任一操作执行失败，都">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yexm1018.com/2021/03/07/a60edbd9d3938850b99a37f0c095d99b/go-schedule0.png">
+<meta property="article:published_time" content="2021-03-07T00:21:41.000Z">
+<meta property="article:modified_time" content="2021-05-16T11:08:54.450Z">
+<meta property="article:author" content="yexm">
+<meta property="article:tag" content="分布式事务">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yexm1018.com/2021/03/07/a60edbd9d3938850b99a37f0c095d99b/go-schedule0.png"><link rel="shortcut icon" href="/img/avatar.png"><link rel="canonical" href="http://yexm1018.com/2021/03/07/a60edbd9d3938850b99a37f0c095d99b/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":10,"languages":{"author":"作者: yexm","link":"链接: ","source":"来源: yexm","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '第一次有人把“分布式事务”讲的这么简单明了',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-16 19:08:54'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const now = new Date()
+          const hour = now.getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">93</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">yexm</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">第一次有人把“分布式事务”讲的这么简单明了</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2021-05-16T11:08:54.450Z" title="undefined 2021-05-16 19:08:54">2021-05-16</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>16分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="第一次有人把“分布式事务”讲的这么简单明了"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div><article class="post-content" id="article-container"><p>又或者在网上购物明明已经扣款，但是却告诉我没有发生交易。这一系列情况都是因为没有事务导致的。这说明了事务在生活中的一些重要性。</p>
+<p>有了事务，你去小卖铺买东西，那就是一手交钱一手交货。有了事务，你去网上购物，扣款即产生订单交易。</p>
+<h3><span id="事务的具体定义">事务的具体定义</span></h3><p>事务提供一种机制将一个活动涉及的所有操作纳入到一个不可分割的执行单元，组成事务的所有操作只有在所有操作均能正常执行的情况下方能提交，只要其中任一操作执行失败，都将导致整个事务的回滚。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">简单地说，事务提供一种“要么什么都不做，要么做全套（All or Nothing）”机制。</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+<h3><span id="数据库本地事务">数据库本地事务</span></h3><h4><span id="acid">ACID</span></h4><p>说到数据库事务就不得不说，数据库事务中的四大特性 ACID：<br>A：原子性(Atomicity)，一个事务(transaction)中的所有操作，要么全部完成，要么全部不完成，不会结束在中间某个环节。</p>
+<p>事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样。</p>
+<p>就像你买东西要么交钱收货一起都执行，要么发不出货，就退钱。</p>
+<p>C：一致性(Consistency)，事务的一致性指的是在一个事务执行之前和执行之后数据库都必须处于一致性状态。</p>
+<p>如果事务成功地完成，那么系统中所有变化将正确地应用，系统处于有效状态。</p>
+<p>如果在事务中出现错误，那么系统中的所有变化将自动地回滚，系统返回到原始状态。</p>
+<p>I：隔离性(Isolation)，指的是在并发环境中，当不同的事务同时操纵相同的数据时，每个事务都有各自的完整数据空间。</p>
+<p>由并发事务所做的修改必须与任何其他并发事务所做的修改隔离。事务查看数据更新时，数据所处的状态要么是另一事务修改它之前的状态，要么是另一事务修改它之后的状态，事务不会查看到中间状态的数据。</p>
+<p>打个比方，你买东西这个事情，是不影响其他人的。</p>
+<p>D：持久性(Durability)，指的是只要事务成功结束，它对数据库所做的更新就必须永久保存下来。</p>
+<p>即使发生系统崩溃，重新启动数据库系统后，数据库还能恢复到事务成功结束时的状态。</p>
+<p>打个比方，你买东西的时候需要记录在账本上，即使老板忘记了那也有据可查。</p>
+<h4><span id="innodb-实现原理">InnoDB 实现原理</span></h4><p>InnoDB 是 MySQL 的一个存储引擎，大部分人对 MySQL 都比较熟悉，这里简单介绍一下数据库事务实现的一些基本原理。<br>在本地事务中，服务和资源在事务的包裹下可以看做是一体的，如下图：</p>
+<p><img src="/2021/03/07/a60edbd9d3938850b99a37f0c095d99b/1615076606681.png"><br>我们的本地事务由资源管理器进行管理：</p>
+<p><img src="/2021/03/07/a60edbd9d3938850b99a37f0c095d99b/1615076625450.jpg"><br>而事务的 ACID 是通过 InnoDB 日志和锁来保证。事务的隔离性是通过数据库锁的机制实现的，持久性通过 Redo Log（重做日志）来实现，原子性和一致性通过 Undo Log 来实现。</p>
+<p>Undo Log 的原理很简单，为了满足事务的原子性，在操作任何数据之前，首先将数据备份到一个地方（这个存储数据备份的地方称为 Undo Log）。然后进行数据的修改。</p>
+<p>如果出现了错误或者用户执行了 Rollback 语句，系统可以利用 Undo Log 中的备份将数据恢复到事务开始之前的状态。 </p>
+<p>和 Undo Log 相反，Redo Log 记录的是新数据的备份。在事务提交前，只要将 Redo Log 持久化即可，不需要将数据持久化。</p>
+<p>当系统崩溃时，虽然数据没有持久化，但是 Redo Log 已经持久化。系统可以根据 Redo Log 的内容，将所有数据恢复到最新的状态。对具体实现过程有兴趣的同学可以去自行搜索扩展。</p>
+<h3><span id="分布式事务">分布式事务</span></h3><h4><span id="什么是分布式事务">什么是分布式事务</span></h4><p>分布式事务指事务的参与者、支持事务的服务器、资源服务器以及事务管理器分别位于不同的分布式系统的不同节点之上。</p>
+<p>简单的说，就是一次大的操作由不同的小操作组成，这些小的操作分布在不同的服务器上，且属于不同的应用，分布式事务需要保证这些小操作要么全部成功，要么全部失败。</p>
+<p>本质上来说，分布式事务就是为了保证不同数据库的数据一致性。</p>
+<ul>
+<li>分布式事务产生的原因</li>
+</ul>
+<p>从上面本地事务来看，我们可以分为两块：</p>
+<ul>
+<li>Service 产生多个节点</li>
+<li>Resource 产生多个节点Service 多个节点<br>随着互联网快速发展，微服务，SOA 等服务架构模式正在被大规模的使用。</li>
+</ul>
+<p>举个简单的例子，一个公司之内，用户的资产可能分为好多个部分，比如余额，积分，优惠券等等。</p>
+<p>在公司内部有可能积分功能由一个微服务团队维护，优惠券又是另外的团队维护。<br><img src="/2021/03/07/a60edbd9d3938850b99a37f0c095d99b/1615076691970.jpg"></p>
+<p>这样的话就无法保证积分扣减了之后，优惠券能否扣减成功。</p>
+<p>Resource多个节点</p>
+<p>同样的，互联网发展得太快了，我们的 MySQL 一般来说装千万级的数据就得进行分库分表。</p>
+<p>对于一个支付宝的转账业务来说，你给朋友转钱，有可能你的数据库是在北京，而你的朋友的钱是存在上海，所以我们依然无法保证他们能同时成功。<br><img src="/2021/03/07/a60edbd9d3938850b99a37f0c095d99b/1615076713991.png"></p>
+<h3><span id="分布式事务的基础">分布式事务的基础</span></h3><p>从上面来看分布式事务是随着互联网高速发展应运而生的，这是一个必然。</p>
+<p>我们之前说过数据库的 ACID 四大特性，已经无法满足我们分布式事务，这个时候又有一些新的大佬提出一些新的理论。</p>
+<p>CAP</p>
+<p>CAP 定理，又被叫作布鲁尔定理。对于设计分布式系统(不仅仅是分布式事务)的架构师来说，CAP 就是你的入门理论。</p>
+<p>C (一致性)：对某个指定的客户端来说，读操作能返回最新的写操作。</p>
+<p>对于数据分布在不同节点上的数据来说，如果在某个节点更新了数据，那么在其他节点如果都能读取到这个最新的数据，那么就称为强一致，如果有某个节点没有读取到，那就是分布式不一致。</p>
+<p>A (可用性)：非故障的节点在合理的时间内返回合理的响应(不是错误和超时的响应)。可用性的两个关键一个是合理的时间，一个是合理的响应。</p>
+<p>合理的时间指的是请求不能无限被阻塞，应该在合理的时间给出返回。合理的响应指的是系统应该明确返回结果并且结果是正确的，这里的正确指的是比如应该返回 50，而不是返回 40。</p>
+<p>P (分区容错性)：当出现网络分区后，系统能够继续工作。打个比方，这里集群有多台机器，有台机器网络出现了问题，但是这个集群仍然可以正常工作。</p>
+<p>熟悉 CAP 的人都知道，三者不能共有，如果感兴趣可以搜索 CAP 的证明，在分布式系统中，网络无法 100% 可靠，分区其实是一个必然现象。</p>
+<p>如果我们选择了 CA 而放弃了 P，那么当发生分区现象时，为了保证一致性，这个时候必须拒绝请求，但是 A 又不允许，所以分布式系统理论上不可能选择 CA 架构，只能选择 CP 或者 AP 架构。</p>
+<p>对于 CP 来说，放弃可用性，追求一致性和分区容错性，我们的 ZooKeeper 其实就是追求的强一致。</p>
+<p>对于 AP 来说，放弃一致性(这里说的一致性是强一致性)，追求分区容错性和可用性，这是很多分布式系统设计时的选择，后面的 BASE 也是根据 AP 来扩展。</p>
+<p>顺便一提，CAP 理论中是忽略网络延迟，也就是当事务提交时，从节点 A 复制到节点 B 没有延迟，但是在现实中这个是明显不可能的，所以总会有一定的时间是不一致。</p>
+<p>同时 CAP 中选择两个，比如你选择了 CP，并不是叫你放弃 A。因为 P 出现的概率实在是太小了，大部分的时间你仍然需要保证 CA。</p>
+<p>就算分区出现了你也要为后来的 A 做准备，比如通过一些日志的手段，是其他机器回复至可用。</p>
+<p>BASE</p>
+<p>BASE 是 Basically Available(基本可用)、Soft state(软状态)和 Eventually consistent (最终一致性)三个短语的缩写，是对 CAP 中 AP 的一个扩展。</p>
+<p>基本可用：分布式系统在出现故障时，允许损失部分可用功能，保证核心功能可用。</p>
+<p>软状态：允许系统中存在中间状态，这个状态不影响系统可用性，这里指的是 CAP 中的不一致。</p>
+<p>最终一致：最终一致是指经过一段时间后，所有节点数据都将会达到一致。</p>
+<p>BASE 解决了 CAP 中理论没有网络延迟，在 BASE 中用软状态和最终一致，保证了延迟后的一致性。</p>
+<p>BASE 和 ACID 是相反的，它完全不同于 ACID 的强一致性模型，而是通过牺牲强一致性来获得可用性，并允许数据在一段时间内是不一致的，但最终达到一致状态。</p>
+<h3><span id="分布式事务解决方案">分布式事务解决方案</span></h3><p>有了上面的理论基础后，这里开始介绍几种常见的分布式事务的解决方案。</p>
+<h4><span id="是否真的要分布式事务">是否真的要分布式事务</span></h4><p>  在说方案之前，首先你一定要明确你是否真的需要分布式事务？<br>上面说过出现分布式事务的两个原因，其中有个原因是因为微服务过多。我见过太多团队一个人维护几个微服务，太多团队过度设计，搞得所有人疲劳不堪。</p>
+<p>而微服务过多就会引出分布式事务，这个时候我不会建议你去采用下面任何一种方案，而是请把需要事务的微服务聚合成一个单机服务，使用数据库的本地事务。</p>
+<p>因为不论任何一种方案都会增加你系统的复杂度，这样的成本实在是太高了，千万不要因为追求某些设计，而引入不必要的成本和复杂度。</p>
+<p>如果你确定需要引入分布式事务可以看看下面几种常见的方案。</p>
+<ul>
+<li>2PC<br>说到 2PC 就不得不聊数据库分布式事务中的 XA Transactions。<br><img src="/2021/03/07/a60edbd9d3938850b99a37f0c095d99b/1615076842932.jpg"></li>
+</ul>
+<p>在 XA 协议中分为两阶段：<br>事务管理器要求每个涉及到事务的数据库预提交(precommit)此操作，并反映是否可以提交。<br>事务协调器要求每个数据库提交数据，或者回滚数据。</p>
+<p>优点：<br>尽量保证了数据的强一致，实现成本较低，在各大主流数据库都有自己实现，对于 MySQL 是从 5.5 开始支持。</p>
+<p>缺点：<br>单点问题：事务管理器在整个流程中扮演的角色很关键，如果其宕机，比如在第一阶段已经完成，在第二阶段正准备提交的时候事务管理器宕机，资源管理器就会一直阻塞，导致数据库无法使用。<br>同步阻塞：在准备就绪之后，资源管理器中的资源一直处于阻塞，直到提交完成，释放资源。<br>数据不一致：两阶段提交协议虽然为分布式数据强一致性所设计，但仍然存在数据不一致性的可能。<br>比如在第二阶段中，假设协调者发出了事务 Commit 的通知，但是因为网络问题该通知仅被一部分参与者所收到并执行了 Commit 操作，其余的参与者则因为没有收到通知一直处于阻塞状态，这时候就产生了数据的不一致性。</p>
+<p>总的来说，XA 协议比较简单，成本较低，但是其单点问题，以及不能支持高并发(由于同步阻塞)依然是其最大的弱点。</p>
+<ul>
+<li>TCC<br>关于 TCC（Try-Confirm-Cancel）的概念，最早是由 Pat Helland 于 2007 年发表的一篇名为《Life beyond Distributed Transactions：an Apostate’s Opinion》的论文提出。 </li>
+</ul>
+<p>TCC 事务机制相比于上面介绍的 XA，解决了如下几个缺点：<br>解决了协调者单点，由主业务方发起并完成这个业务活动。业务活动管理器也变成多点，引入集群。<br>同步阻塞：引入超时，超时后进行补偿，并且不会锁定整个资源，将资源转换为业务逻辑形式，粒度变小。<br>数据一致性，有了补偿机制之后，由业务活动管理器控制一致性。</p>
+<p>对于 TCC 的解释：<br>Try 阶段：尝试执行，完成所有业务检查（一致性），预留必需业务资源（准隔离性）。<br>Confirm 阶段：确认真正执行业务，不作任何业务检查，只使用 Try 阶段预留的业务资源，Confirm 操作满足幂等性。要求具备幂等设计，Confirm 失败后需要进行重试。<br>Cancel 阶段：取消执行，释放 Try 阶段预留的业务资源，Cancel 操作满足幂等性。Cancel 阶段的异常和 Confirm 阶段异常处理方案基本上一致。<br><img src="/2021/03/07/a60edbd9d3938850b99a37f0c095d99b/1615076877134.jpg"><br>举个简单的例子：如果你用 100 元买了一瓶水， Try 阶段：你需要向你的钱包检查是否够 100 元并锁住这 100 元，水也是一样的。</p>
+<p>如果有一个失败，则进行 Cancel(释放这 100 元和这一瓶水)，如果 Cancel 失败不论什么失败都进行重试 Cancel，所以需要保持幂等。</p>
+<p>如果都成功，则进行 Confirm，确认这 100 元被扣，和这一瓶水被卖，如果 Confirm 失败无论什么失败则重试(会依靠活动日志进行重试)。</p>
+<p>对于 TCC 来说适合一些：<br>强隔离性，严格一致性要求的活动业务。<br>执行时间较短的业务。</p>
+<p>实现参考：<a target="_blank" rel="noopener" href="https://github.com/liuyangming/ByteTCC/%E3%80%82">https://github.com/liuyangming/ByteTCC/。</a></p>
+<ul>
+<li>本地消息表</li>
+</ul>
+<p>本地消息表这个方案最初是 eBay 提出的，eBay 的完整方案 <a target="_blank" rel="noopener" href="https://queue.acm.org/detail.cfm?id=1394128%E3%80%82">https://queue.acm.org/detail.cfm?id=1394128。</a></p>
+<p>此方案的核心是将需要分布式处理的任务通过消息日志的方式来异步执行。消息日志可以存储到本地文本、数据库或消息队列，再通过业务规则自动或人工发起重试。</p>
+<p>人工重试更多的是应用于支付场景，通过对账系统对事后问题的处理。<br><img src="/2021/03/07/a60edbd9d3938850b99a37f0c095d99b/1615076898251.jpg"><br>对于本地消息队列来说核心是把大事务转变为小事务。还是举上面用 100 元去买一瓶水的例子。</p>
+<ol>
+<li><p>当你扣钱的时候，你需要在你扣钱的服务器上新增加一个本地消息表，你需要把你扣钱和减去水的库存写入到本地消息表，放入同一个事务(依靠数据库本地事务保证一致性）。</p>
+</li>
+<li><p>这个时候有个定时任务去轮询这个本地事务表，把没有发送的消息，扔给商品库存服务器，叫它减去水的库存，到达商品服务器之后，这时得先写入这个服务器的事务表，然后进行扣减，扣减成功后，更新事务表中的状态。</p>
+</li>
+<li><p>商品服务器通过定时任务扫描消息表或者直接通知扣钱服务器，扣钱服务器在本地消息表进行状态更新。</p>
+</li>
+<li><p>针对一些异常情况，定时扫描未成功处理的消息，进行重新发送，在商品服务器接到消息之后，首先判断是否是重复的。</p>
+</li>
+</ol>
+<p>如果已经接收，再判断是否执行，如果执行在马上又进行通知事务；如果未执行，需要重新执行由业务保证幂等，也就是不会多扣一瓶水。</p>
+<p>本地消息队列是 BASE 理论，是最终一致模型，适用于对一致性要求不高的情况。实现这个模型时需要注意重试的幂等。</p>
+<ul>
+<li>MQ 事务</li>
+</ul>
+<p>在 RocketMQ 中实现了分布式事务，实际上是对本地消息表的一个封装，将本地消息表移动到了 MQ 内部。</p>
+<p>下面简单介绍一下MQ事务，如果想对其详细了解可以参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/453c6e7ff81c%E3%80%82">https://www.jianshu.com/p/453c6e7ff81c。</a><br><img src="/2021/03/07/a60edbd9d3938850b99a37f0c095d99b/1615076941115.jpg"></p>
+<p>基本流程如下：<br>第一阶段 Prepared 消息，会拿到消息的地址。<br>第二阶段执行本地事务。<br>第三阶段通过第一阶段拿到的地址去访问消息，并修改状态。消息接受者就能使用这个消息。</p>
+<p>如果确认消息失败，在 RocketMQ Broker 中提供了定时扫描没有更新状态的消息。</p>
+<p>如果有消息没有得到确认，会向消息发送者发送消息，来判断是否提交，在 RocketMQ 中是以 Listener 的形式给发送者，用来处理。 </p>
+<p><img src="/2021/03/07/a60edbd9d3938850b99a37f0c095d99b/1615076947158.jpg"></p>
+<p>如果消费超时，则需要一直重试，消息接收端需要保证幂等。如果消息消费失败，这时就需要人工进行处理，因为这个概率较低，如果为了这种小概率时间而设计这个复杂的流程反而得不偿失。</p>
+<ul>
+<li>Saga 事务</li>
+</ul>
+<p>Saga 是 30 年前一篇数据库伦理提到的一个概念。其核心思想是将长事务拆分为多个本地短事务，由 Saga 事务协调器协调，如果正常结束那就正常完成，如果某个步骤失败，则根据相反顺序一次调用补偿操作。</p>
+<p>Saga 的组成：每个 Saga 由一系列 sub-transaction Ti 组成，每个 Ti 都有对应的补偿动作 Ci，补偿动作用于撤销 Ti 造成的结果。这里的每个 T，都是一个本地事务。</p>
+<p>可以看到，和 TCC 相比，Saga 没有“预留 try”动作，它的 Ti 就是直接提交到库。</p>
+<p>Saga 的执行顺序有两种：<br>T1，T2，T3，…，Tn。<br>T1，T2，…，Tj，Cj，…，C2，C1，其中 0 &lt; j &lt; n 。</p>
+<p>Saga 定义了两种恢复策略：<br>向后恢复，即上面提到的第二种执行顺序，其中 j 是发生错误的 sub-transaction，这种做法的效果是撤销掉之前所有成功的 sub-transation，使得整个 Saga 的执行结果撤销。<br>向前恢复，适用于必须要成功的场景，执行顺序是类似于这样的：T1，T2，…，Tj(失败)，Tj(重试)，…，Tn，其中 j 是发生错误的 sub-transaction。该情况下不需要 Ci。</p>
+<p>这里要注意的是，在 Saga 模式中不能保证隔离性，因为没有锁住资源，其他事务依然可以覆盖或者影响当前事务。</p>
+<p>还是拿 100 元买一瓶水的例子来说，这里定义：<br>T1 = 扣 100 元，T2 = 给用户加一瓶水，T3 = 减库存一瓶水。<br>C1 = 加100元，C2 = 给用户减一瓶水，C3 = 给库存加一瓶水。</p>
+<p>我们一次进行 T1，T2，T3 如果发生问题，就执行发生问题的 C 操作的反向。</p>
+<p>上面说到的隔离性的问题会出现在，如果执行到 T3 这个时候需要执行回滚，但是这个用户已经把水喝了(另外一个事务)，回滚的时候就会发现，无法给用户减一瓶水了。</p>
+<p>这就是事务之间没有隔离性的问题。可以看见 Saga 模式没有隔离性的影响还是较大，可以参照华为的解决方案：从业务层面入手加入一 Session 以及锁的机制来保证能够串行化操作资源。</p>
+<p>也可以在业务层面通过预先冻结资金的方式隔离这部分资源， 最后在业务操作的过程中可以通过及时读取当前状态的方式获取到最新的更新。（具体实例：可以参考华为的 Service Comb）</p>
+<h3><span id="最后">最后</span></h3><p>还是那句话，能不用分布式事务就不用，如果非得使用的话，结合自己的业务分析，看看自己的业务比较适合哪一种，是在乎强一致，还是最终一致即可。</p>
+<p>最后在总结一些问题，大家可以下来自己从文章找寻答案：<br>ACID 和 CAP 的 CA 是一样的吗？<br>分布式事务常用的解决方案的优缺点是什么？适用于什么场景？<br>分布式事务出现的原因？用来解决什么痛点？</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">yexm</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://yexm1018.com/2021/03/07/a60edbd9d3938850b99a37f0c095d99b/">http://yexm1018.com/2021/03/07/a60edbd9d3938850b99a37f0c095d99b/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://yexm1018.com" target="_blank">yexm</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/">分布式事务</a></div><div class="post_share"><div class="social-share" data-image="/2021/03/07/a60edbd9d3938850b99a37f0c095d99b/go-schedule0.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/03/07/ebfb21bbb2c67f32d750cbde9770e409/"><img class="prev-cover" src="/2021/03/07/ebfb21bbb2c67f32d750cbde9770e409/go-gc.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">AVL树(二叉平衡树)详解与实现</div></div></a></div><div class="next-post pull-right"><a href="/2021/03/07/daf4af28cde06af0a37065cd2877ffa8/"><img class="next-cover" src="/2021/03/07/daf4af28cde06af0a37065cd2877ffa8/go-lock.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">事务性发件箱模式(outbox pattern)</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">yexm</div><div class="author-info__description">今日事，今日毕竟</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">93</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a></div></div><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/yexm" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:yexingmin06221@126.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">十步一代码，千里不bug</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">事务的具体定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">数据库本地事务</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-number">2.1.</span> <span class="toc-text">ACID</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-number">2.2.</span> <span class="toc-text">InnoDB 实现原理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">分布式事务</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-number">3.1.</span> <span class="toc-text">什么是分布式事务</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">分布式事务的基础</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">5.</span> <span class="toc-text">分布式事务解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-number">5.1.</span> <span class="toc-text">是否真的要分布式事务</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">6.</span> <span class="toc-text">最后</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/05/16/example/" title="example"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="example"/></a><div class="content"><a class="title" href="/2021/05/16/example/" title="example">example</a><time datetime="2021-05-16T10:38:41.000Z" title="发表于 2021-05-16 18:38:41">2021-05-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/05/11/798f7e7017cd550dfc61b041d5250ac9/" title="使用go/analysis自己实现linter"><img src="/2021/05/11/798f7e7017cd550dfc61b041d5250ac9/go-schedule0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用go/analysis自己实现linter"/></a><div class="content"><a class="title" href="/2021/05/11/798f7e7017cd550dfc61b041d5250ac9/" title="使用go/analysis自己实现linter">使用go/analysis自己实现linter</a><time datetime="2021-05-11T00:00:18.000Z" title="发表于 2021-05-11 08:00:18">2021-05-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/05/10/eec19ee821d35d2e8d8cbfa6c0831b9a/" title="go底层利器之ast以及它的妙用"><img src="/2021/05/10/eec19ee821d35d2e8d8cbfa6c0831b9a/go0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="go底层利器之ast以及它的妙用"/></a><div class="content"><a class="title" href="/2021/05/10/eec19ee821d35d2e8d8cbfa6c0831b9a/" title="go底层利器之ast以及它的妙用">go底层利器之ast以及它的妙用</a><time datetime="2021-05-10T13:55:18.000Z" title="发表于 2021-05-10 21:55:18">2021-05-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/05/09/d1bed1805f4556560852111651ab9507/" title="公司为什么需要建立一套统一的开发框架"><img src="/2021/05/09/d1bed1805f4556560852111651ab9507/go0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="公司为什么需要建立一套统一的开发框架"/></a><div class="content"><a class="title" href="/2021/05/09/d1bed1805f4556560852111651ab9507/" title="公司为什么需要建立一套统一的开发框架">公司为什么需要建立一套统一的开发框架</a><time datetime="2021-05-09T15:05:26.000Z" title="发表于 2021-05-09 23:05:26">2021-05-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/05/05/75fc4301d28ff2d0570143783f522ced/" title="go module"><img src="/2021/05/05/75fc4301d28ff2d0570143783f522ced/go0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="go module"/></a><div class="content"><a class="title" href="/2021/05/05/75fc4301d28ff2d0570143783f522ced/" title="go module">go module</a><time datetime="2021-05-05T01:36:25.000Z" title="发表于 2021-05-05 09:36:25">2021-05-05</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021  <i id="heartbeat" class="fa fas fa-heartbeat"></i> yexm</div><div class="footer_custom_text">当你的才华还撑不起野心时，那你就应该静下心来学习</div></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="944518800" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="true" muted></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = [
+  'title',
+  '#config-diff',
+  '#body-wrap',
+  '#rightside-config-hide',
+  '#rightside-config-show',
+  '.js-pjax'
+]
+
+if (false) {
+  pjaxSelectors.unshift('meta[property="og:image"]', 'meta[property="og:title"]', 'meta[property="og:url"]')
+}
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener toc scroll 
+  window.removeEventListener('scroll', window.tocScrollFn)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // Analytics
+  if (false) {
+    MtaH5.pgv()
+  }
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
